@@ -5,6 +5,11 @@ class Repository {
         this.db = dbConnection;
     }
 
+    async checkApiKey(apiKey) {
+        const result = await this.db.query("SELECT * FROM api_keys WHERE api_key = $1 AND active = true AND expires_at > current_timestamp", [apiKey]);
+        return result.rows;
+    }
+
     async getAllDirectors() {
         const result = await this.db.query("SELECT directors.id, directors.name, directors.birth_date, countries.name as country FROM directors LEFT JOIN countries ON directors.country_id = countries.id");
         return result.rows;
